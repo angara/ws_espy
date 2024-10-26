@@ -19,5 +19,9 @@ micro-python:
 deploy:
 	${rshell} -b ${espbaud} -p ${espport} --timing cp *.py /pyboard/
 
+# Ctrl-X to stop
+repl:
+	${rshell} -b ${espbaud} -p ${espport} repl
+
 
 .PHONY: micro-python deploy
