@@ -21,12 +21,10 @@ addr: 1
 
 ### Protocol
 
-   
 send (addr, func, reg, num, crc): 0x01  0x03  0x00 0x00  0x00 0x01  0x84 0x0A
 recv (addr, func, len, bytes, crc): 0x01  0x03  0x02  0x00 0x56  0x38 0x7A
 
 0x00 0x56 -> 86 -> 8.6 m/s
-
 
 config registers: 40001, 40002
 
@@ -37,19 +35,16 @@ config registers: 40001, 40002
 
 ? The device baud rate is configured in register 2001 using an ID:
 ?
-? Baud rate	ID
+? Baud rate ID
 ? 2400  0
 ? 4800  1
 ? 9600  2
-
-
 
 mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 0 -c 1 -l 1000 -o 1 /dev/tty.usbserial-1340
 
 ### Links
 
 - https://kotyara12.ru/iot/esp32_rs485_modbus/
-
 
 ## ESP32
 
@@ -60,9 +55,12 @@ pip install esptool
 - https://micropython.org/download/ESP32_GENERIC/
 - https://micropython.org/download/SEEED_XIAO_SAMD21/
 
+- https://pypi.org/project/adafruit-ampy/
 
-https://pypi.org/project/adafruit-ampy/
+- https://github.com/dhylands/rshell
+- https://github.com/wendlers/mpfshell
 
+pip install rshell
 pip install adafruit-ampy
 
 ```sh
@@ -75,7 +73,6 @@ esptool.py -p /dev/tty.usbserial-0001  erase_flash
 
 esptool.py -p /dev/tty.usbserial-0001 -b 460800 write_flash -z 0x1000 img/ESP32_GENERIC-20240602-v1.23.0.bin
 ;; -b 921600
-
 
 ### DS18x20
 
@@ -114,5 +111,3 @@ pin.on()
 pin.off()
 
 ```
-
-
