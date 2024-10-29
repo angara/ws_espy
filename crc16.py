@@ -54,3 +54,7 @@ def crc16(data:bytes) -> bytes:
     crc = (crc >> 8) ^ CRC16_TABLE[((crc) ^ b) & 0xFF]
 
   return struct.pack('<H',crc)
+
+
+# crc16(b'\x01\x03\x00\x00\x00\x01') == b'\x84\x0A'
+# crc16(b'\x01\x03\x02\x00\x56') == b'\x38\x7A'

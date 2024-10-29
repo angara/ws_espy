@@ -1,6 +1,5 @@
 # ESP32 based weather station
 
-
 ## Wiring
 
 - green - 485-A
@@ -42,12 +41,26 @@ config registers: 40001, 40002
 
 mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 0 -c 1 -l 1000 -o 1 /dev/tty.usbserial-1340
 
+### Wind sensor
+
+wiring:
+
+- green: RS485 A
+- blue:  RS485 B
+- brown: +V (10-30V)
+- black: GND
+  
 ### Links
 
 - https://kotyara12.ru/iot/esp32_rs485_modbus/
+- https://minimalmodbus.readthedocs.io/en/stable/
+- https://pymodbus.readthedocs.io/en/latest/ ???
 
 ## ESP32
 
+- https://lastminuteengineers.com/esp32-pinout-reference/
+- https://lastminuteengineers.com/esp32-wroom-32-pinout-reference/
+- 
 - https://github.com/espressif/esptool
 
 pip install esptool
