@@ -76,6 +76,10 @@ pip install esptool
 pip install rshell
 pip install adafruit-ampy
 
+- https://docs.micropython.org/en/latest/reference/mpremote.html#mpremote
+
+pip install mpremote
+
 ```sh
 export AMPY_PORT=/dev/tty.SLAB_USBtoUART
 ampy ls

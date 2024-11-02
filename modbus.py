@@ -49,12 +49,57 @@ CRC16_TABLE = (
 
 def crc16(data:bytes) -> bytes:
   crc = 0xFFFF
-
   for b in data:
     crc = (crc >> 8) ^ CRC16_TABLE[((crc) ^ b) & 0xFF]
-
   return struct.pack('<H',crc)
-
 
 # crc16(b'\x01\x03\x00\x00\x00\x01') == b'\x84\x0A'
 # crc16(b'\x01\x03\x02\x00\x56') == b'\x38\x7A'
+
+
+def read_register(uart, addr, register):
+  "send read holding register (0x03) request to uart and parse response value"
+  FN = 0x03
+  data = struct.pack('>BBHH', addr, FN, register, 1)
+  data = data + crc16(data)
+  rc = uart.write(data)
+  print(f'read_register({addr=},{register=})', f'bytes sent {rc}')
+  raw_resp = uart.read()
+  if len(raw_resp) != 7:
+    print(f"read_register({addr=},{register=})", "response length error")
+    return None
+  resp, crc = raw_resp[:-2], raw_resp[-2:]
+  print(f'{resp=} {crc=}') ###
+  if crc != crc16(resp):
+    print(f"read_register({addr=},{register=})", "response crc error")
+    return None
+  _addr, fn, _nbr, value = struct.unpack('>BBBH', resp)
+  if FN != fn:
+    print(f"read_register({addr=},{register=})", f"response error {fn=}")
+    return None
+  return value
+#
+
+"""
+import modbus
+
+class TestUart:
+  def read(_self):
+    return b'\x01\x03\x02\x00\x56\x38\x7A'
+  def write(_self, data:bytes):
+    print(f'write({data=})')
+    return len(data)
+
+modbus.read_register(TestUart(), 1, 0)
+# =86
+
+"""
+
+# 3.5 chars between frames, 1.5 between bytes, not less that 1.75
+# FRAME_GAP_US = int(1750 if BAUD2 > 19200 else (3.5*11*1000000 / BAUD2))
+
+# RX2 = 16
+# TX2 = 17
+# DE2 = 18
+
+# dere = Pin(DE2, Pin.OUT)
