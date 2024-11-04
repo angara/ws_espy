@@ -1,6 +1,6 @@
 # ESP32 based weather station
 
-## Wiring
+## Wind sensor wiring
 
 - green - 485-A
 - blue  - 485-B
@@ -18,7 +18,7 @@ addr: 1
 - https://devices.esphome.io/devices/Renke-RS-FSJT-N01-Wind-Speed
 - https://devices.esphome.io/devices/Renke-RS-FXJT-N01-Wind-Direction
 
-### Protocol
+### Modbus notes
 
 send (addr, func, reg, num, crc): 0x01  0x03  0x00 0x00  0x00 0x01  0x84 0x0A
 recv (addr, func, len, bytes, crc): 0x01  0x03  0x02  0x00 0x56  0x38 0x7A
@@ -41,17 +41,6 @@ config registers: 40001, 40002
 
 mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 0 -c 1 -l 1000 -o 1 /dev/tty.usbserial-1340
 
-### Wind sensor
-
-wiring:
-
-- green: RS485 A
-- blue:  RS485 B
-- brown: +V (10-30V)
-- black: GND
-  
-### Links
-
 - https://kotyara12.ru/iot/esp32_rs485_modbus/
 - https://minimalmodbus.readthedocs.io/en/stable/
 - https://pymodbus.readthedocs.io/en/latest/ ???
@@ -60,83 +49,44 @@ wiring:
 
 - https://lastminuteengineers.com/esp32-pinout-reference/
 - https://lastminuteengineers.com/esp32-wroom-32-pinout-reference/
-- 
 - https://github.com/espressif/esptool
+- https://docs.micropython.org/en/latest/reference/mpremote.html
 
-pip install esptool
+```sh
+pip install esptool mpremote
+```
 
 - https://micropython.org/download/ESP32_GENERIC/
 - https://micropython.org/download/SEEED_XIAO_SAMD21/
 
-- https://pypi.org/project/adafruit-ampy/
+### Other tools
 
+- https://pypi.org/project/adafruit-ampy/
 - https://github.com/dhylands/rshell
 - https://github.com/wendlers/mpfshell
 
-pip install rshell
-pip install adafruit-ampy
+## Application
 
-- https://docs.micropython.org/en/latest/reference/mpremote.html
+### Libraries
 
-pip install mpremote
+Copy files from repo to `mrequests` folder:
 
 - https://github.com/SpotlightKid/mrequests
 
-NOTE: `time.sleep(1)` patch reqired in transport_serial.py (line 125) before flush input!
-
-```sh
-export AMPY_PORT=/dev/tty.SLAB_USBtoUART
-ampy ls
-```
-
-esptool.py -p /dev/tty.usbserial-0001  erase_flash
-;; -c esp32
-
-esptool.py -p /dev/tty.usbserial-0001 -b 460800 write_flash -z 0x1000 img/ESP32_GENERIC-20240602-v1.23.0.bin
-;; -b 921600
-
-### DS18x20
-
-```python
-from machine import Pin
-import onewire
-
-ow = onewire.OneWire(Pin(12)) # create a OneWire bus on GPIO12
-ow.scan()               # return a list of devices on the bus
-ow.reset()              # reset the bus
-# ow.readbyte()           # read a byte
-# ow.writebyte(0x12)      # write a byte on the bus
-# ow.write('123')         # write bytes on the bus
-# ow.select_rom(b'12345678') # select a specific device by its ROM code
-```
-
-```python
-
-import time, ds18x20
-ds = ds18x20.DS18X20(ow)
-roms = ds.scan()
-ds.convert_temp()
-time.sleep_ms(750)
-for rom in roms:
-    print(ds.read_temp(rom))
-
-```
-
-```python
-
-# import webrepl_setup
-
-import machine
-pin = machine.Pin(2, machine.Pin.OUT)
-pin.on()
-pin.off()
-
-```
-
-Setup application autostart at boot
+Autostart at boot
 
 ```python
 import os; os.remove('main.py')
 
 with open("main.py",'w') as f: f.write("import app; app.main()")
+```
+
+Config:
+
+```python
+SUBMIT_USER = ""
+SUBMIT_PASS = ""
+
+WIFI_SSID = ""
+WIFI_PASS = ""
 ```

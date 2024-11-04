@@ -157,7 +157,7 @@ def main():
     try:
       loop()
     except Exception as ex:
-      print("main loop except:", ex)
+      print("main loop exception:", ex)
       blink(6)
     time.sleep(1)
 #

@@ -69,7 +69,7 @@ def read_register(uart, addr, register):
     print(f"read_register({addr=},{register=})", "response length error")
     return None
   resp, crc = raw_resp[:-2], raw_resp[-2:]
-  print(f'{resp=} {crc=}') ###
+  print(f'uart: {resp=} {crc=}') ###
   if crc != crc16(resp):
     print(f"read_register({addr=},{register=})", "response crc error")
     return None
