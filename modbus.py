@@ -65,7 +65,7 @@ def read_register(uart, addr, register):
   rc = uart.write(data)
   print(f'read_register({addr=},{register=})', f'bytes sent {rc}')
   raw_resp = uart.read()
-  if len(raw_resp) != 7:
+  if (not raw_resp) or (len(raw_resp) != 7):
     print(f"read_register({addr=},{register=})", "response length error")
     return None
   resp, crc = raw_resp[:-2], raw_resp[-2:]
@@ -92,14 +92,11 @@ class TestUart:
 
 modbus.read_register(TestUart(), 1, 0)
 # =86
-
 """
 
 # 3.5 chars between frames, 1.5 between bytes, not less that 1.75
 # FRAME_GAP_US = int(1750 if BAUD2 > 19200 else (3.5*11*1000000 / BAUD2))
 
-# RX2 = 16
-# TX2 = 17
-# DE2 = 18
-
-# dere = Pin(DE2, Pin.OUT)
+# sample:
+# 0x01 0x03 0x00 0x00 0x00 0x01 0x84 0x0A
+# 0x01 0x03 0x02 0x00 0x56 0x38 0x7A

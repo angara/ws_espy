@@ -1,6 +1,7 @@
 
 SUBMIT_URL = "http://rs.angara.net/meteo/_in"
-AUTH_BASIC = ""
+SUBMIT_USER = ""
+SUBMIT_PASS = ""
 
 WIFI_SSID = ""
 WIFI_PASS = ""

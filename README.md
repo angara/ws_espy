@@ -76,9 +76,13 @@ pip install esptool
 pip install rshell
 pip install adafruit-ampy
 
-- https://docs.micropython.org/en/latest/reference/mpremote.html#mpremote
+- https://docs.micropython.org/en/latest/reference/mpremote.html
 
 pip install mpremote
+
+- https://github.com/SpotlightKid/mrequests
+
+NOTE: `time.sleep(1)` patch reqired in transport_serial.py (line 125) before flush input!
 
 ```sh
 export AMPY_PORT=/dev/tty.SLAB_USBtoUART
@@ -127,4 +131,12 @@ pin = machine.Pin(2, machine.Pin.OUT)
 pin.on()
 pin.off()
 
+```
+
+Setup application autostart at boot
+
+```python
+import os; os.remove('main.py')
+
+with open("main.py",'w') as f: f.write("import app; app.main()")
 ```
