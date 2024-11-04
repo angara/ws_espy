@@ -3,7 +3,7 @@ VERSION = "ws_esp 2024.11.04"
 
 import time
 
-from machine import Pin, UART
+from machine import Pin, UART, reset
 from onewire import OneWire
 from ds18x20 import DS18X20
 
@@ -64,6 +64,7 @@ WIND_READ_COUNT = 10
 WIND_READ_DELAY = 5
 
 LOOP_DELAY = 10
+ATTEMPT_MAX = 10
 
 WIND_MINIMAL = 0.8
 RHUMBS = [0, 45, 90, 135, 180, 225, 270, 315]
@@ -112,7 +113,7 @@ attempt_count = 0
 def loop():
   global attempt_count
 
-  print("system time:", time.time())
+  print("uptime:", time.time())
   wind_data = [(read_wind(), read_rhumb())
                for _ in range(WIND_READ_COUNT) if not time.sleep(WIND_READ_DELAY)]
   print(f'{wind_data=}') ###
@@ -128,15 +129,20 @@ def loop():
   attempt_count += 1
   if hwid := conn.setup_wifi(config.WIFI_SSID, config.WIFI_PASS):
     req['hwid'] = config.HWID or hwid
+    req['uptime'] = time.time()
     rc = conn.submit_data(config.SUBMIT_URL, (config.SUBMIT_USER, config.SUBMIT_PASS), req)
     print("send_data() response:", rc)
-    # if rc.status_code == 200:
-    #   attempt_count = 0
+    if rc.status_code == 200:
+      attempt_count = 0
+      blink(2)
+    else:
+      blink(4)
   else:
     print("wifi setup failed!")
   #
-  # if attempt_count > ATTEMPT_MAX: ###
-  #  reboot
+  if attempt_count > ATTEMPT_MAX:
+    reset()
+  #
   time.sleep(LOOP_DELAY)
 #
 

@@ -6,7 +6,6 @@ from mrequests import request, Response
 
 WIFI_RETRY_COUNT = 10
 WIFI_RETRY_DELAY = 1
-
 SUBMIT_TIMEOUT = 10
 
 
@@ -17,9 +16,10 @@ def mac2str(mac):
 #
 
 def setup_wifi(ssid, password):
-  ### !!!
-  return "qwe"
-
+  if not ssid or ssid == "-":
+    print("setup_wifi: wifi disabled")
+    return "no_mac"
+  #
   if wifi.active() and wifi.isconnected():
     print("wifi connnected:", wifi.ipconfig('addr4'))
     return mac2str(wifi.config('mac'))
@@ -36,7 +36,7 @@ def setup_wifi(ssid, password):
 #
 
 def query_string(data:dict) -> str:
-    # NOTE: not escaping!
+    # NOTE: no escaping!
     return '&'.join([f'{k}={v}' for k,v in data.items() if v is not None])
 
 def submit_data(url:str, auth:tuple, data:dict) -> Response:
