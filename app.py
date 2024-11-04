@@ -61,10 +61,10 @@ def read_rhumb():
 
 # # # # #
 
-WIND_READ_COUNT = 10
-WIND_READ_DELAY = 5
-
+WIND_READ_COUNT = 50
+WIND_READ_DELAY = 4
 LOOP_DELAY = 10
+
 ATTEMPT_MAX = 10
 
 WIND_MINIMAL = 0.8
@@ -142,10 +142,6 @@ def loop():
   else:
     print("wifi setup failed!")
   #
-  if attempt_count > ATTEMPT_MAX:
-    print("too many failed attempts! reset...")
-    reset()
-  #
   time.sleep(LOOP_DELAY)
 #
 
@@ -160,4 +156,8 @@ def main():
       print("main loop exception:", ex)
       blink(6)
     time.sleep(1)
+    if attempt_count > ATTEMPT_MAX:
+      print("too many failed attempts! reset...")
+      reset()
+    #
 #

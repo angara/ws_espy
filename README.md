@@ -81,7 +81,7 @@ import os; os.remove('main.py')
 with open("main.py",'w') as f: f.write("import app; app.main()")
 ```
 
-Config:
+### Config
 
 ```python
 SUBMIT_USER = ""
