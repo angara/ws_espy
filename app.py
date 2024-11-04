@@ -19,14 +19,15 @@ Led   = Pin(2, Pin.OUT)
 
 
 def blink(n:int):
+  D = 0.5 if n < 5 else 0.3
+  Led.off()
+  time.sleep(0.5)
+  for _ in range(n):
+    time.sleep(D)
+    Led.on()
+    time.sleep(D)
     Led.off()
-    time.sleep(0.2)
-    for _ in range(n):
-        time.sleep(0.2)
-        Led.on()
-        time.sleep(0.2)
-        Led.off()
-    time.sleep(0.2)
+  time.sleep(0.5)
 #
 
 # # # # #
@@ -131,7 +132,8 @@ def loop():
     req['hwid'] = config.HWID or hwid
     req['uptime'] = time.time()
     rc = conn.submit_data(config.SUBMIT_URL, (config.SUBMIT_USER, config.SUBMIT_PASS), req)
-    print("send_data() response:", rc)
+    # print("send_data() response:", rc.status_code, rc.text)
+    print("send_data() response:", rc)  ###
     if rc.status_code == 200:
       attempt_count = 0
       blink(2)
@@ -141,6 +143,7 @@ def loop():
     print("wifi setup failed!")
   #
   if attempt_count > ATTEMPT_MAX:
+    print("too many failed attempts! reset...")
     reset()
   #
   time.sleep(LOOP_DELAY)

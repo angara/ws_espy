@@ -18,7 +18,7 @@ def mac2str(mac):
 def setup_wifi(ssid, password):
   if not ssid or ssid == "-":
     print("setup_wifi: wifi disabled")
-    return "no_mac"
+    return "-"
   #
   if wifi.active() and wifi.isconnected():
     print("wifi connnected:", wifi.ipconfig('addr4'))
