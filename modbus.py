@@ -65,20 +65,20 @@ def read_register(uart, addr, register):
   rc = uart.write(data)
   raw_resp = uart.read()
   if not raw_resp:
-    print(f"read_register({addr=},{register=})", "no response!")
+    print(f"read_register({addr=},{register})", "no response!")
     return None
   else:
-    print(f'read_register({addr=},{register=})', raw_resp)
+    print(f'read_register({addr=},{register})', raw_resp.hex())
   if len(raw_resp) != 7:
-    print(f"read_register({addr=},{register=})", "response length error!")
+    print(f"read_register({addr=},{register})", "response length error!")
     return None
   resp, crc = raw_resp[:-2], raw_resp[-2:]
   if crc != crc16(resp):
-    print(f"read_register({addr=},{register=})", "response crc error!")
+    print(f"read_register({addr=},{register})", "response crc error!")
     return None
   _addr, fn, _nbr, value = struct.unpack('>BBBH', resp)
   if FN != fn:
-    print(f"read_register({addr=},{register=})", f"response error {fn=}!")
+    print(f"read_register({addr=},{register})", f"response error {fn=}!")
     return None
   return value
 #

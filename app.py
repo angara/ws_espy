@@ -3,9 +3,10 @@ VERSION = "ws_esp 2024.11.04"
 
 import time
 
-from machine import Pin, UART, reset
+from machine import Pin, UART, reset, unique_id
 from onewire import OneWire
 from ds18x20 import DS18X20
+import esp32
 
 import config
 import conn
@@ -29,6 +30,9 @@ def blink(n:int):
     Led.off()
   time.sleep(0.5)
 #
+
+def mcu_temp():
+  return (esp32.raw_temperature() - 32) * 5 / 9
 
 # # # # #
 
@@ -84,7 +88,7 @@ def main_rhumb_degree(rhs):
   return None
 
 
-def process_wind(wind_data):
+def process_wind(wind_data:list) -> dict:
   """returns dict(w=, g=, b=)"""
   res = {}
   rhs = [b for w,b in wind_data if (w is not None) and (w >= WIND_MINIMAL) and (b is not None)]
@@ -103,13 +107,14 @@ def process_wind(wind_data):
 
 # # # # #
 
-def setup():
-  print(VERSION)
-  print(f'{DsPin=}')
-  print(f'{Uart2=}')
-#
-
+hwid = config.HWID or unique_id().hex()
 attempt_count = 0
+
+def setup():
+  print(f'{VERSION} {hwid=}')
+  print(f'{Uart2=}')
+  print(f'{DsPin=}')
+#
 
 def loop():
   global attempt_count
@@ -128,9 +133,10 @@ def loop():
     req['t'] = temp
   #
   attempt_count += 1
-  if hwid := conn.setup_wifi(config.WIFI_SSID, config.WIFI_PASS):
-    req['hwid'] = config.HWID or hwid
+  if conn.setup_wifi(config.WIFI_SSID, config.WIFI_PASS):
+    req['hwid'] = hwid
     req['uptime'] = time.time()
+    req['tmcu'] = mcu_temp()
     rc = conn.submit_data(config.SUBMIT_URL, (config.SUBMIT_USER, config.SUBMIT_PASS), req)
     # print("send_data() response:", rc.status_code, rc.text)
     print("send_data() response:", rc)  ###

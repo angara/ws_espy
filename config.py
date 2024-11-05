@@ -6,4 +6,4 @@ SUBMIT_PASS = ""
 WIFI_SSID = "-"
 WIFI_PASS = ""
 
-HWID = None  # use mac address instead
+HWID = None  # use machine.unique_id() instead

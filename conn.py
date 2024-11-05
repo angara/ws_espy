@@ -3,17 +3,11 @@ import network
 import time
 from mrequests import request, Response
 
-
 WIFI_RETRY_COUNT = 10
 WIFI_RETRY_DELAY = 1
 SUBMIT_TIMEOUT = 10
 
-
 wifi = network.WLAN(network.STA_IF)
-
-def mac2str(mac):
-  return ''.join([f"{b:02x}" for b in mac])
-#
 
 def setup_wifi(ssid, password):
   if not ssid or ssid == "-":
@@ -22,14 +16,14 @@ def setup_wifi(ssid, password):
   #
   if wifi.active() and wifi.isconnected():
     print("wifi connnected:", wifi.ipconfig('addr4'))
-    return mac2str(wifi.config('mac'))
+    return True
   else:
     wifi.active(False)
     wifi.active(True)
     wifi.connect(ssid, password)
     for _ in range(WIFI_RETRY_COUNT):
       if wifi.isconnected():
-        return mac2str(wifi.config('mac'))
+        return True
       print("wait for WiFi...")
       time.sleep(WIFI_RETRY_DELAY)
     return False
