@@ -74,15 +74,9 @@ Copy files from repo to `mrequests` folder:
 
 - https://github.com/SpotlightKid/mrequests
 
-Autostart at boot
-
-```python
-import os; os.remove('main.py')
-
-with open("main.py",'w') as f: f.write("import app; app.main()")
-```
-
 ### Config
+
+Copy `config.py` to `.config.py` and set correct variable values.
 
 ```python
 SUBMIT_USER = ""
@@ -90,4 +84,12 @@ SUBMIT_PASS = ""
 
 WIFI_SSID = ""
 WIFI_PASS = ""
+```
+
+Autostart at boot (set/remove)
+
+```python
+with open("main.py",'w') as f: f.write("import app; app.main()")
+
+import os; os.remove('main.py')
 ```

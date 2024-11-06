@@ -15,7 +15,7 @@ def setup_wifi(ssid, password):
     return "-"
   #
   if wifi.active() and wifi.isconnected():
-    print("wifi connnected:", wifi.ipconfig('addr4'))
+    print("wifi connnected:", wifi.ifconfig())
     return True
   else:
     wifi.active(False)

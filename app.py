@@ -1,12 +1,11 @@
 
-VERSION = "ws_esp 2024.11.04"
+VERSION = "ws_esp 2024.11.06"
 
 import time
 
 from machine import Pin, UART, reset, unique_id
 from onewire import OneWire
 from ds18x20 import DS18X20
-import esp32
 
 import config
 import conn
@@ -31,8 +30,8 @@ def blink(n:int):
   time.sleep(0.5)
 #
 
-def mcu_temp():
-  return (esp32.raw_temperature() - 32) * 5 / 9
+# def mcu_temp():
+#   return (esp32.raw_temperature() - 32) * 5 / 9
 
 # # # # #
 
@@ -136,10 +135,9 @@ def loop():
   if conn.setup_wifi(config.WIFI_SSID, config.WIFI_PASS):
     req['hwid'] = hwid
     req['uptime'] = time.time()
-    req['tmcu'] = mcu_temp()
+    # req['tmcu'] = mcu_temp()
     rc = conn.submit_data(config.SUBMIT_URL, (config.SUBMIT_USER, config.SUBMIT_PASS), req)
-    # print("send_data() response:", rc.status_code, rc.text)
-    print("send_data() response:", rc)  ###
+    print("send_data() response:", rc.status_code, rc.text)
     if rc.status_code == 200:
       attempt_count = 0
       blink(2)
