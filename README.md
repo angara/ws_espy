@@ -39,7 +39,7 @@ config registers: 40001, 40002
 - ? 9600  2
 
 ```sh
-mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 0 -c 1 -l 1000 -o 1 /dev/tty.usbserial-1340
+mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 1 -c 1 -l 1000 -o 1 /dev/tty.usbserial-1340
 ```
 
 - https://kotyara12.ru/iot/esp32_rs485_modbus/

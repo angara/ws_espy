@@ -65,7 +65,7 @@ def read_rhumb():
 # # # # #
 
 WIND_READ_COUNT = 100
-WIND_READ_DELAY = 2.8
+WIND_READ_DELAY = 4
 LOOP_DELAY = 1
 
 ATTEMPT_MAX = 5
