@@ -48,18 +48,18 @@ def read_temp():
     return None
 #
 
-def read_wind():
+def read_wind_speed() -> float:
   Led.on()
   w10 = modbus.read_register(Uart2, 1, 0)
   Led.off()
   return w10 / 10 if w10 is not None else None
 #
 
-def read_rhumb():
+def read_wind_dir() -> int:
   Led.on()
-  rh = modbus.read_register(Uart2, 2, 0)
+  d10 = modbus.read_register(Uart2, 2, 0)
   Led.off()
-  return rh
+  return int(d10 / 10) if d10 is not None else None
 #
 
 # # # # #
@@ -71,28 +71,28 @@ LOOP_DELAY = 1
 ATTEMPT_MAX = 5
 
 WIND_MINIMAL = 0.8
-RHUMBS = [0, 45, 90, 135, 180, 225, 270, 315]
 
-def main_rhumb_degree(rhs):
-  """return main rhumb degree value or None"""
+
+def main_dir_degrees(dirs):
+  """return main direction degrees value or None"""
   try:
-    res = [0 for _ in range(len(RHUMBS))]
-    for r in rhs:
-      if r >= 0 and r < len(res):
-        res[r] += 1
-    if m := max(res):
-      return RHUMBS[res.index(m)]
+    histogram = [0 for _ in range(360)]
+    for d in dirs:
+      if d >= 0 and r < len(histogram):
+        histogram[d] += 1
+    if m := max(histogram):
+      return histogram.index(m)
   except Exception as ex:
-    print(f'main_rhumb_degree exception: {rhs=}', ex)
+    print(f'main_dir_degrees exception: {rhs=}', ex)
   return None
 
 
 def process_wind(wind_data:list) -> dict:
   """returns dict(w=, g=, b=)"""
   res = {}
-  rhs = [b for w,b in wind_data if (w is not None) and (w >= WIND_MINIMAL) and (b is not None)]
-  print(f"process_wind: {rhs=}") ###
-  b = main_rhumb_degree(rhs)
+  dirs = [b for w,b in wind_data if (w is not None) and (w >= WIND_MINIMAL) and (b is not None)]
+  print(f"process_wind: {dirs=}") ###
+  b = main_dir_degrees(dirs)
   if b is not None:
     res['b'] = b
   #
@@ -119,7 +119,7 @@ def loop():
   global attempt_count
 
   print("uptime:", time.time())
-  wind_data = [(read_wind(), read_rhumb())
+  wind_data = [(read_wind_speed(), read_wind_dir())
                for _ in range(WIND_READ_COUNT) if not time.sleep(WIND_READ_DELAY)]
   print(f'{wind_data=}') ###
   req = process_wind(wind_data)

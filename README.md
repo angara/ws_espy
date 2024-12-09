@@ -35,6 +35,8 @@ Sample:
 - ? 9600  2
 - ? 19200 3
 
+RHUMBS = [0, 45, 90, 135, 180, 225, 270, 315]
+
 
 ```sh
 mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 1 -c 1 -l 1000 -o 1 /dev/tty.usbserial-1340
