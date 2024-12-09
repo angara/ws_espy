@@ -26,17 +26,15 @@ Sample:
 - recv (addr, func, len, bytes, crc): 0x01  0x03  0x02  0x00 0x56  0x38 0x7A
 - value: 0x00 0x56 -> 86 -> 8.6 m/s
 
-config registers: 40001, 40002
-
-- ? 0100H 40101 device address (0-252) read and write
-- ? 0101H 40102 baud rate (2400/4800/9600) read and write
-- ? The device modbus address is stored in register 2000.
-- ? The device baud rate is configured in register 2001 using an ID:
+- The device modbus address is stored in register 2000 (0x07D0) - [1-247] 
+- The device baud rate is configured in register 2001 using an ID:
 
 - ? Baud rate ID
 - ? 2400  0
 - ? 4800  1
 - ? 9600  2
+- ? 19200 3
+
 
 ```sh
 mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 1 -c 1 -l 1000 -o 1 /dev/tty.usbserial-1340
@@ -92,4 +90,21 @@ Autostart at boot (set/remove)
 with open("main.py",'w') as f: f.write("import app; app.main()")
 
 import os; os.remove('main.py')
+```
+
+### Set Device Address
+
+```apt install python3-serial```
+
+```
+read_register(addr=1,2000) 01030200017984
+1
+read_register(addr=1,2001) 01030200017984
+1
+read_register(addr=1,2002) 0103020000b844
+0
+read_register(addr=1,2003) 01030266ed53a9
+26349
+read_register(addr=1,2004) 0103024d5e0cec
+19806
 ```

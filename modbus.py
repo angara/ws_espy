@@ -57,13 +57,13 @@ def crc16(data:bytes) -> bytes:
 # crc16(b'\x01\x03\x02\x00\x56') == b'\x38\x7A'
 
 
-def read_register(uart, addr, register):
+def read_register(uart, addr:int, register:int) -> int:
   "send read holding register (0x03) request to uart and parse response value"
   FN = 0x03
   data = struct.pack('>BBHH', addr, FN, register, 1)
   data = data + crc16(data)
   rc = uart.write(data)
-  raw_resp = uart.read()
+  raw_resp = uart.read(size=7)
   if not raw_resp:
     print(f"read_register({addr=},{register})", "no response!")
     return None
@@ -81,6 +81,32 @@ def read_register(uart, addr, register):
     print(f"read_register({addr=},{register})", f"response error {fn=}!")
     return None
   return value
+#
+
+
+def write_register(uart, addr:int, register:int, value:int) -> bool:
+  "send write register (0x06) request to uart and parse response value"
+  FN = 0x06
+  data = struct.pack('>BBHH', addr, FN, register, value)
+  data = data + crc16(data)
+  rc = uart.write(data)
+  raw_resp = uart.read(size=8)
+  if not raw_resp:
+    print(f"write_register({addr=},{register})", "no response!")
+    return None
+  else:
+    print(f'write_register({addr=},{register})', raw_resp.hex())
+  if len(raw_resp) not in [5, 8]:
+    print(f"write_register({addr=},{register})", "response length error!")
+    return None
+  resp, crc = raw_resp[:-2], raw_resp[-2:]
+  if crc != crc16(resp):
+    print(f"write_register({addr=},{register})", "response crc error!")
+    return None
+  if resp[1] != FN:
+    print(f"write_register({addr=},{register})", f"error {resp[2]}!")
+    return False
+  return True
 #
 
 """
