@@ -63,7 +63,7 @@ def read_register(uart, addr:int, register:int) -> int:
   data = struct.pack('>BBHH', addr, FN, register, 1)
   data = data + crc16(data)
   rc = uart.write(data)
-  raw_resp = uart.read(size=7)
+  raw_resp = uart.read(7)
   if not raw_resp:
     print(f"read_register({addr=},{register})", "no response!")
     return None
@@ -90,7 +90,7 @@ def write_register(uart, addr:int, register:int, value:int) -> bool:
   data = struct.pack('>BBHH', addr, FN, register, value)
   data = data + crc16(data)
   rc = uart.write(data)
-  raw_resp = uart.read(size=8)
+  raw_resp = uart.read(8)
   if not raw_resp:
     print(f"write_register({addr=},{register})", "no response!")
     return None
