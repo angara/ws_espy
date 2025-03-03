@@ -1,5 +1,5 @@
 
-VERSION = "ws_esp 2024.12.16"
+VERSION = "ws_espy v2025.03.03"
 
 import time
 
@@ -111,26 +111,35 @@ attempt_count = 0
 
 def setup():
   print(f'{VERSION} {hwid=}')
-  print(f'{Uart2=}')
-  print(f'{DsPin=}')
+  print(f'{config.READ_WIND=} {Uart2=}')
+  print(f'{config.READ_TEMP=} {DsPin=}')
 #
 
 def loop():
   global attempt_count
 
   print("uptime:", time.time())
-  wind_data = [(read_wind_speed(), read_wind_dir())
-               for _ in range(WIND_READ_COUNT) if not time.sleep(WIND_READ_DELAY)]
-  print(f'{wind_data=}') ###
-  req = process_wind(wind_data)
+
+  if config.READ_WIND:
+    wind_data = [(read_wind_speed(), read_wind_dir())
+                for _ in range(WIND_READ_COUNT) if not time.sleep(WIND_READ_DELAY)]
+    print(f'{wind_data=}') ###
+    req = process_wind(wind_data)
+  else:
+    for _ in range(WIND_READ_COUNT):
+      time.sleep(WIND_READ_DELAY)
+    req = {}
   #
-  Led.on()
-  temp = read_temp()
-  Led.off()
-  print(f'{temp=}')
-  if temp is not None:
-    req['t'] = temp
+
+  if config.READ_TEMP:
+    Led.on()
+    temp = read_temp()
+    Led.off()
+    print(f'{temp=}')
+    if temp is not None:
+      req['t'] = temp
   #
+
   attempt_count += 1
   if conn.setup_wifi(config.WIFI_SSID, config.WIFI_PASS):
     req['hwid'] = hwid

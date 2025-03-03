@@ -1,5 +1,7 @@
 # ESP32 based weather station
 
+```ws_espy 2025.03.03```
+
 ## Wind sensor wiring
 
 PR-3000-FSJT-N01
@@ -62,6 +64,9 @@ pip install esptool mpremote
 
 ### Other tools
 
+- https://github.com/astral-sh/uv
+- https://docs.astral.sh/uv/
+
 - https://pypi.org/project/adafruit-ampy/
 - https://github.com/dhylands/rshell
 - https://github.com/wendlers/mpfshell
@@ -76,7 +81,7 @@ Copy files from repo to `mrequests` folder:
 
 ### Config
 
-Copy `config.py` to `.config.py` and set correct variable values.
+Copy `config.example` to `.config.py` and set correct variable values.
 
 ```python
 SUBMIT_USER = ""
@@ -86,7 +91,13 @@ WIFI_SSID = ""
 WIFI_PASS = ""
 ```
 
-Autostart at boot (set/remove)
+Start app in REPL
+
+```python
+import app; app.main()
+```
+
+Autostart at boot (set/remove). Do it in REPL.
 
 ```python
 with open("main.py",'w') as f: f.write("import app; app.main()")

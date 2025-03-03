@@ -50,18 +50,16 @@
 /pkg/
 /out/
 /tmp/
-/node_modules/
 
-## cache
+node_modules/
 __pycache__/
+*.egg-info/
 
 ## allow 
-!.clj-kondo/
-!.gitignore
-!.github/
+!.clj-kondo/config.edn
 !.git*
-!.dockerignore
 !.eslint*
+!.dockerignore
 !.npmingore
 !.travis.yml
 !package.lock

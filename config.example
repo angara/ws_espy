@@ -7,3 +7,6 @@ WIFI_SSID = "-"
 WIFI_PASS = ""
 
 HWID = None  # use machine.unique_id() instead
+
+READ_TEMP = True
+READ_WIND = True
