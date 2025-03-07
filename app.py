@@ -111,8 +111,10 @@ attempt_count = 0
 
 def setup():
   print(f'{VERSION} {hwid=}')
-  print(f'{config.READ_WIND=} {Uart2=}')
-  print(f'{config.READ_TEMP=} {DsPin=}')
+  if config.READ_WIND:
+    print(f'Wind: {Uart2}')
+  if config.READ_TEMP:  
+    print(f'Temp: {DsPin=}')
 #
 
 def loop():
@@ -127,6 +129,9 @@ def loop():
     req = process_wind(wind_data)
   else:
     for _ in range(WIND_READ_COUNT):
+      Led.on()
+      time.sleep(0.004)
+      Led.off()
       time.sleep(WIND_READ_DELAY)
     req = {}
   #

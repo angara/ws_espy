@@ -5,7 +5,7 @@ from mrequests import request, Response
 
 WIFI_RETRY_COUNT = 10
 WIFI_RETRY_DELAY = 1
-SUBMIT_TIMEOUT = 10
+SUBMIT_TIMEOUT = 20
 
 wifi = network.WLAN(network.STA_IF)
 
