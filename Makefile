@@ -6,10 +6,11 @@
 espport=/dev/ttyUSB0
 
 
-install-tools:
+install:
 	uv venv
 	uv pip install esptool mpremote
-	@echo "exec: source .venv/bin/activate"
+	@echo "to activate venv run: source .venv/bin/activate"
+
 #	python3 -m venv .venv
 #	pip install esptool mpremote 
 #   pip install micropython-esp32-stubs # VSCode support
@@ -28,13 +29,10 @@ deploy:
 	mpremote connect port:${espport} fs cp .config.py :config.py
 	mpremote connect port:${espport} fs ls
 
-deploy-main:
-	mpremote connect port:${espport} fs cp main-py.stub :main.py
 
+init-board: flash-micropython deploy-lib deploy
 
-init-board: flash-micropython deploy-lib deploy deploy-main
-
-# Ctrl-X to stop
+# Ctrl-X to stop, Ctrl-D to restart
 repl:
 	mpremote connect port:${espport} repl
 

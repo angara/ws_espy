@@ -1,5 +1,5 @@
 
-VERSION = "ws_espy v2025.03.03"
+VERSION = "ws_espy v2025.03.18"
 
 import time
 
@@ -104,18 +104,21 @@ def process_wind(wind_data:list) -> dict:
   return res
 #
 
+
 # # # # #
 
 hwid = config.HWID or unique_id().hex()
 attempt_count = 0
+
 
 def setup():
   print(f'{VERSION} {hwid=}')
   if config.READ_WIND:
     print(f'Wind: {Uart2}')
   if config.READ_TEMP:  
-    print(f'Temp: {DsPin=}')
+    print(f'Temp:', read_temp())
 #
+
 
 def loop():
   global attempt_count
@@ -162,6 +165,7 @@ def loop():
   #
   time.sleep(LOOP_DELAY)
 #
+
 
 # # # # #
 
