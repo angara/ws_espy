@@ -5,12 +5,12 @@
 # espport=/dev/tty.usbmodem14601
 
 # Linux
-# espport=/dev/ttyUSB0
-# python_image=images/ESP32_GENERIC-20241129-v1.24.1.bin
+espport=/dev/ttyUSB0
+python_image=images/ESP32_GENERIC-20241129-v1.24.1.bin
 
 # C3
-espport=/dev/ttyACM0
-python_image=images/ESP32_GENERIC_C3-20241129-v1.24.1.bin
+# espport=/dev/ttyACM0
+# python_image=images/ESP32_GENERIC_C3-20241129-v1.24.1.bin
 
 
 install:
