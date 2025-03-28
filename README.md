@@ -1,6 +1,11 @@
 # ESP32 based weather station
 
-```ws_espy 2025.03.03```
+```ws_espy 2025.03.18```
+
+## TODO
+
+- implement interactive configuration
+
 
 ## Wind sensor wiring
 
@@ -50,6 +55,12 @@ mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 1 -c 1 -l 1000 -o 1 /dev/tty.usb
 
 ## ESP32
 
+MicroPython images:
+
+- https://micropython.org/download/ESP32_GENERIC/
+- https://micropython.org/download/SEEED_XIAO_SAMD21/
+
+
 - https://lastminuteengineers.com/esp32-pinout-reference/
 - https://lastminuteengineers.com/esp32-wroom-32-pinout-reference/
 - https://github.com/espressif/esptool
@@ -58,9 +69,6 @@ mbpoll -m rtu -b 4800 -d 8 -P none -s 1 -a 1 -r 1 -c 1 -l 1000 -o 1 /dev/tty.usb
 ```sh
 pip install esptool mpremote
 ```
-
-- https://micropython.org/download/ESP32_GENERIC/
-- https://micropython.org/download/SEEED_XIAO_SAMD21/
 
 ### Other tools
 
@@ -121,3 +129,9 @@ read_register(addr=1,2003) 01030266ed53a9
 read_register(addr=1,2004) 0103024d5e0cec
 19806
 ```
+
+## ESP32 C3 Super Mini
+
+- <https://www.espboards.dev/esp32/esp32-c3-super-mini/>
+
+- Blue LED (gpio 8)

@@ -2,8 +2,15 @@
 
 # Mac
 # espport=/dev/tty.usbserial-0001
+# espport=/dev/tty.usbmodem14601
+
 # Linux
-espport=/dev/ttyUSB0
+# espport=/dev/ttyUSB0
+# python_image=images/ESP32_GENERIC-20241129-v1.24.1.bin
+
+# C3
+espport=/dev/ttyACM0
+python_image=images/ESP32_GENERIC_C3-20241129-v1.24.1.bin
 
 
 install:
@@ -17,7 +24,7 @@ install:
 
 flash-micropython:
 	esptool.py -p ${espport} erase_flash
-	esptool.py -p ${espport} write_flash -z 0x1000 images/ESP32_GENERIC-20241129-v1.24.1.bin
+	esptool.py -p ${espport} write_flash -z 0x1000 ${python_image}
 	sleep 1
 
 deploy-lib:
