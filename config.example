@@ -10,3 +10,6 @@ HWID = None  # use machine.unique_id() instead
 
 READ_TEMP = True
 READ_WIND = True
+
+BOARD = "esp32"
+# BOARD = "esp32-c3"

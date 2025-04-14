@@ -1,5 +1,5 @@
 
-VERSION = "ws_espy v2025.03.18"
+VERSION = "ws_espy v2025.04.14"
 
 import time
 
@@ -13,7 +13,11 @@ import modbus
 
 # pins:
 #
-Uart2 = UART(2, 4800)  # RX2 = 16, TX2 = 17
+if config.board == "esp32-c3":
+  Uart = UART(1, baudrate=115200, tx=Pin(10), rx=Pin(9))
+else:
+  Uart = UART(2, 4800)  # RX2 = 16, TX2 = 17
+
 DsPin = Pin(15)
 Led   = Pin(2, Pin.OUT)
 
@@ -50,14 +54,14 @@ def read_temp():
 
 def read_wind_speed() -> float:
   Led.on()
-  w10 = modbus.read_register(Uart2, 1, 0)
+  w10 = modbus.read_register(Uart, 1, 0)
   Led.off()
   return w10 / 10 if w10 is not None else None
 #
 
 def read_wind_dir() -> int:
   Led.on()
-  d10 = modbus.read_register(Uart2, 2, 0)
+  d10 = modbus.read_register(Uart, 2, 0)
   Led.off()
   return int(d10 / 10) if d10 is not None else None
 #
@@ -114,7 +118,7 @@ attempt_count = 0
 def setup():
   print(f'{VERSION} {hwid=}')
   if config.READ_WIND:
-    print(f'Wind: {Uart2}')
+    print(f'Wind: {Uart}')
   if config.READ_TEMP:  
     print(f'Temp:', read_temp())
 #

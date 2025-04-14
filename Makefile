@@ -4,13 +4,13 @@
 # espport=/dev/tty.usbserial-0001
 # espport=/dev/tty.usbmodem14601
 
-# Linux
+# generic ESP32
 espport=/dev/ttyUSB0
 python_image=images/ESP32_GENERIC-20241129-v1.24.1.bin
 
-# C3
-# espport=/dev/ttyACM0
-# python_image=images/ESP32_GENERIC_C3-20241129-v1.24.1.bin
+# ESP32-C3
+espport=/dev/ttyACM0
+python_image=images/ESP32_GENERIC_C3-20241129-v1.24.1.bin
 
 
 install:
@@ -27,6 +27,11 @@ flash-micropython:
 	esptool.py -p ${espport} write_flash -z 0x1000 ${python_image}
 	sleep 1
 
+flash-micropython-c3:
+	esptool.py -p ${espport} erase_flash
+	esptool.py -p ${espport} write_flash 0 ${python_image}
+	sleep 1
+
 deploy-lib:
 	mpremote connect port:${espport} fs cp -r mrequests :
 	mpremote connect port:${espport} fs ls mrequests
@@ -38,6 +43,8 @@ deploy:
 
 
 init-board: flash-micropython deploy-lib deploy
+
+init-board-c3: flash-micropython-c3 deploy-lib deploy
 
 # Ctrl-X to stop, Ctrl-D to restart
 repl:
