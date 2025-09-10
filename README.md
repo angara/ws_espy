@@ -68,6 +68,7 @@ MicroPython images:
 
 ```sh
 pip install esptool mpremote
+# sudo apt remove brltty
 ```
 
 ### Other tools

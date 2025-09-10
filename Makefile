@@ -6,11 +6,12 @@
 
 # generic ESP32
 espport=/dev/ttyUSB0
-python_image=images/ESP32_GENERIC-20241129-v1.24.1.bin
+# python_image=images/ESP32_GENERIC-20241129-v1.24.1.bin
+python_image=images/ESP32_GENERIC-20250809-v1.26.0.bin
 
 # ESP32-C3
-espport=/dev/ttyACM0
-python_image=images/ESP32_GENERIC_C3-20241129-v1.24.1.bin
+# espport=/dev/ttyACM0
+# python_image=images/ESP32_GENERIC_C3-20241129-v1.24.1.bin
 
 
 install:
@@ -23,8 +24,8 @@ install:
 #   pip install micropython-esp32-stubs # VSCode support
 
 flash-micropython:
-	esptool.py -p ${espport} erase_flash
-	esptool.py -p ${espport} write_flash -z 0x1000 ${python_image}
+	uv run esptool -p ${espport} erase_flash
+	uv run esptool -p ${espport} write_flash -z 0x1000 ${python_image}
 	sleep 1
 
 flash-micropython-c3:
@@ -41,6 +42,9 @@ deploy:
 	mpremote connect port:${espport} fs cp .config.py :config.py
 	mpremote connect port:${espport} fs ls
 
+dev:
+	uv run mpremote connect port:${espport} fs cp gprs.py :
+	uv run mpremote connect port:${espport} repl
 
 init-board: flash-micropython deploy-lib deploy
 
@@ -48,6 +52,6 @@ init-board-c3: flash-micropython-c3 deploy-lib deploy
 
 # Ctrl-X to stop, Ctrl-D to restart
 repl:
-	mpremote connect port:${espport} repl
+	uv run mpremote connect port:${espport} repl
 
 #.
