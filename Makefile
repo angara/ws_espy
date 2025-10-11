@@ -16,12 +16,8 @@ python_image=images/ESP32_GENERIC-20250809-v1.26.0.bin
 
 install:
 	uv venv
-	uv pip install esptool mpremote
+	uv add esptool mpremote micropython-esp32-stubs
 	@echo "to activate venv run: source .venv/bin/activate"
-
-#	python3 -m venv .venv
-#	pip install esptool mpremote 
-#   pip install micropython-esp32-stubs # VSCode support
 
 flash-micropython:
 	uv run esptool -p ${espport} erase_flash

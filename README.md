@@ -1,6 +1,6 @@
 # ESP32 based weather station
 
-```ws_espy 2025.03.18```
+```ws_espy 2025.10.11```
 
 ## TODO
 
