@@ -1,4 +1,6 @@
 
+VERSION = "ws_espy v2025.10.12"
+
 def load_dotenv(dotenv_path=".env") -> dict[str, str] | None:
     try:
         with open(dotenv_path, 'r') as file:
@@ -18,19 +20,21 @@ def bool_val(s:str) -> bool | None:
         return False
     return None
 
-ENV = load_dotenv() or {}
 
-SUBMIT_URL  = ENV.get("SUBMIT_URL", "http://rs.angara.net/meteo/_in")
-SUBMIT_USER = ENV.get("SUBMIT_USER", "")
-SUBMIT_PASS = ENV.get("SUBMIT_PASS", "")
+env = load_dotenv() or {}
 
-WIFI_SSID = ENV.get("WIFI_SSID", "-")
-WIFI_PASS = ENV.get("WIFI_PASS", "")
+SUBMIT_URL  = env.get("SUBMIT_URL", "http://rs.angara.net/meteo/_in")
+SUBMIT_USER = env.get("SUBMIT_USER", "")
+SUBMIT_PASS = env.get("SUBMIT_PASS", "")
 
-HWID = ENV.get("HWID")  # use machine.unique_id() instead
+WIFI_SSID = env.get("WIFI_SSID")
+WIFI_PASS = env.get("WIFI_PASS")
 
-READ_TEMP = bool_val(ENV.get("READ_TEMP", "yes"))
-READ_WIND = bool_val(ENV.get("READ_WIND", "yes"))
+GPRS_APN  = env.get("GPRS_APN", "internet.tele2.ru")
 
-BOARD = ENV.get("BOARD", "esp32")
-# BOARD = "esp32-c3"
+HWID = env.get("HWID")  # use machine.unique_id() instead
+
+READ_TEMP = bool_val(env.get("READ_TEMP", "yes"))
+READ_WIND = bool_val(env.get("READ_WIND", "yes"))
+
+BOARD = env.get("BOARD", "esp32")  # "esp32-c3"

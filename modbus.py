@@ -57,12 +57,12 @@ def crc16(data:bytes) -> bytes:
 # crc16(b'\x01\x03\x02\x00\x56') == b'\x38\x7A'
 
 
-def read_register(uart, addr:int, register:int) -> int:
+def read_register(uart, addr:int, register:int) -> int | None:
   "send read holding register (0x03) request to uart and parse response value"
   FN = 0x03
   data = struct.pack('>BBHH', addr, FN, register, 1)
   data = data + crc16(data)
-  rc = uart.write(data)
+  _rc = uart.write(data)
   raw_resp = uart.read(7)
   if not raw_resp:
     print(f"read_register({addr=},{register})", "no response!")
@@ -84,12 +84,12 @@ def read_register(uart, addr:int, register:int) -> int:
 #
 
 
-def write_register(uart, addr:int, register:int, value:int) -> bool:
+def write_register(uart, addr:int, register:int, value:int) -> bool | None:
   "send write register (0x06) request to uart and parse response value"
   FN = 0x06
   data = struct.pack('>BBHH', addr, FN, register, value)
   data = data + crc16(data)
-  rc = uart.write(data)
+  _rc = uart.write(data)
   raw_resp = uart.read(8)
   if not raw_resp:
     print(f"write_register({addr=},{register})", "no response!")

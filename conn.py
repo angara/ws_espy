@@ -2,6 +2,7 @@
 import network
 import time
 from mrequests import request, Response
+import ure
 
 WIFI_RETRY_COUNT = 10
 WIFI_RETRY_DELAY = 1
@@ -9,10 +10,10 @@ SUBMIT_TIMEOUT = 20
 
 wifi = network.WLAN(network.STA_IF)
 
-def setup_wifi(ssid, password):
+def setup_wifi(ssid, password) -> bool:
   if not ssid or ssid == "-":
     print("setup_wifi: wifi disabled!")
-    return "-"
+    return False
   #
   if wifi.active() and wifi.isconnected():
     print("wifi connnected:", wifi.ifconfig())
@@ -38,3 +39,17 @@ def submit_data(url:str, auth:tuple, data:dict) -> Response:
   qs = query_string(data)
   return request('GET', f'{url}?{qs}', auth=auth, timeout=SUBMIT_TIMEOUT)
 #
+
+
+def split_url(url):
+    # pattern: scheme://host[:port][/path]
+    m = ure.match(r'(\w+)://([^/:]+)(?::(\d+))?(.*)', url)
+    if not m:
+        return None
+    proto, host, port, path = m.group(1), m.group(2), m.group(3), m.group(4)
+    return {
+        'protocol': proto,
+        'host': host,
+        'port': int(port) if port else (443 if proto == 'https' else 80),
+        'path': path or '/'
+    }

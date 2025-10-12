@@ -10,8 +10,6 @@ import conn
 import modbus
 
 
-VERSION = "ws_espy v2025.10.12"
-
 # pins:
 #
 if config.BOARD == "esp32-c3":
@@ -47,21 +45,21 @@ def read_temp():
     print(f"read_temp({DsPin}): {roms=}")
     if roms:
         ds.convert_temp()
-        time.sleep_ms(750) # noqa
+        time.sleep_ms(750) # type: ignore[unresolved-attribute]
         return ds.read_temp(roms[0])
     else:
         print(f"read_temp({DsPin}): no ds18b20 found!")
         return None
 
 
-def read_wind_speed() -> float:
+def read_wind_speed() -> float | None:
     Led.on()
     w10 = modbus.read_register(Uart, 1, 0)
     Led.off()
     return w10 / 10 if w10 is not None else None
 
 
-def read_wind_dir() -> int:
+def read_wind_dir() -> int | None:
     Led.on()
     d10 = modbus.read_register(Uart, 2, 0)
     Led.off()
@@ -121,7 +119,7 @@ attempt_count = 0
 
 
 def setup():
-    print(f"{VERSION} {hwid=}")
+    print(f"{config.VERSION} {hwid=}")
     if config.READ_WIND:
         print(f"Wind: {Uart}")
     if config.READ_TEMP:
@@ -160,6 +158,8 @@ def loop():
     #
 
     attempt_count += 1
+
+
     if conn.setup_wifi(config.WIFI_SSID, config.WIFI_PASS):
         req["hwid"] = hwid
         req["uptime"] = time.time()

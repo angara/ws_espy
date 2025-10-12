@@ -55,14 +55,16 @@ node_modules/
 __pycache__/
 *.egg-info/
 
-## allow 
+## allow
 !.clj-kondo/config.edn
 !.git*
 !.eslint*
 !.dockerignore
 !.npmingore
+!.python-version
 !.travis.yml
 !package.lock
+!uv.lock
 !yarn.lock
 
 #.

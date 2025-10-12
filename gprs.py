@@ -1,3 +1,6 @@
+# XXX:!!!
+
+
 from machine import UART, Pin
 import time
 
@@ -73,7 +76,7 @@ def power_cycle(pin_number=MODEM_PWR):
 # send_at('at+csq')  > 10
 
 cmds = [
-    "AT",             
+    "AT",
     "AT+CFUN=1",
     'AT+SAPBR=3,1,"CONTYPE","GPRS"',
     # AT+SAPBR=3,1,"APN","your_apn",

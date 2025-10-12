@@ -1,1 +1,2 @@
-import app; app.main()
+import app
+# app.main()
