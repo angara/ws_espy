@@ -25,6 +25,18 @@ addr: 1
 - https://devices.esphome.io/devices/Renke-RS-FSJT-N01-Wind-Speed
 - https://devices.esphome.io/devices/Renke-RS-FXJT-N01-Wind-Direction
 
+### Module connection cable
+
+- orange       - +5
+- orange-white - not connected
+- green        - 1-wire data
+- green-white  - ground
+
+- brown        - +12
+- brown-white  - ground
+- blue         - 485-B
+- blue-white   - 485-A
+
 ### Modbus notes
 
 Sample:
@@ -88,17 +100,17 @@ Copy files from repo to `mrequests` folder:
 
 - https://github.com/SpotlightKid/mrequests
 
-### Config
+### Config environment
 
-Copy `config.example` to `.config.py` and set correct variable values.
+Copy `env.example` to `.env` and set correct values.
 
-```python
-SUBMIT_USER = ""
-SUBMIT_PASS = ""
+Use `ENV_FILE` to specify different config file.
 
-WIFI_SSID = ""
-WIFI_PASS = ""
 ```
+ENV_FILE=.env make deploy-config
+```
+
+### Dev
 
 Start app in REPL
 

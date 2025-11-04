@@ -24,6 +24,9 @@ DsPin = Pin(15)
 Led = Pin(2, Pin.OUT)
 
 
+WIND_SPEED_ADDR = 2
+WIND_DIR_ADDR = 1
+
 def blink(n: int):
     D = 0.5 if n < 5 else 0.3
     Led.off()
@@ -56,22 +59,26 @@ def read_temp():
 
 
 def read_wind_speed() -> float | None:
+    time.sleep(0.1)
     Led.on()
-    w10 = modbus.read_register(Uart, 1, 0)
+    w10 = modbus.read_register(Uart, WIND_SPEED_ADDR, 0)
     Led.off()
+    print("read_wind_speed:", w10)
     return w10 / 10 if w10 is not None else None
 
 
 def read_wind_dir() -> int | None:
+    time.sleep(0.1)
     Led.on()
-    d10 = modbus.read_register(Uart, 2, 0)
+    d10 = modbus.read_register(Uart, WIND_DIR_ADDR, 0)
     Led.off()
+    print("read_wind_dir:", d10)
     return int(d10 / 10) if d10 is not None else None
 
 
 # # # # #
 
-WIND_READ_COUNT = 100
+WIND_READ_COUNT = 90
 WIND_READ_DELAY = 4
 LOOP_DELAY = 1
 
@@ -131,8 +138,8 @@ def setup():
 
 def show_submit_result(rc):
     global attempt_count
-    if rc.status_code:
-        print("submit_data() response:", rc.status_code, rc.text)
+    if rc.get("status_code"):
+        print("submit_data() response:", rc.status_code, rc.get("text"))
         if rc.status_code == 200:
             attempt_count = 0
             blink(2)
