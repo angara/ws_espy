@@ -1,8 +1,8 @@
 
-import network
+import network  # type: ignore[import-untyped]
 import time
 from mrequests import request, Response
-import ure
+import ure  # type: ignore[import-untyped]
 
 WIFI_RETRY_COUNT = 10
 WIFI_RETRY_DELAY = 1

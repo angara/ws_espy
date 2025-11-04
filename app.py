@@ -1,15 +1,18 @@
 
 import time
 
-from machine import Pin, UART, reset, unique_id
-from onewire import OneWire
-from ds18x20 import DS18X20
+from machine import Pin, UART, reset, unique_id  # type: ignore[import-untyped]
+from onewire import OneWire  # type: ignore[import-untyped]
+from ds18x20 import DS18X20  # type: ignore[import-untyped]
 
 import config
 import conn
 import modbus
+import sim900
 
 
+# NOTE: Uart1 used in sim900!
+#
 # pins:
 #
 if config.BOARD == "esp32-c3":
@@ -126,11 +129,21 @@ def setup():
         print("Temp:", read_temp())
 
 
+def show_submit_result(rc):
+    global attempt_count
+    if rc.status_code:
+        print("submit_data() response:", rc.status_code, rc.text)
+        if rc.status_code == 200:
+            attempt_count = 0
+            blink(2)
+        else:
+            blink(4)
+
+
 def loop():
     global attempt_count
 
     print("uptime:", time.time())
-
     if config.READ_WIND:
         wind_data = [
             (read_wind_speed(), read_wind_dir())
@@ -159,23 +172,22 @@ def loop():
 
     attempt_count += 1
 
+    req["hwid"] = hwid
+    req["uptime"] = time.time()
+    # req['tmcu'] = mcu_temp()
 
-    if conn.setup_wifi(config.WIFI_SSID, config.WIFI_PASS):
-        req["hwid"] = hwid
-        req["uptime"] = time.time()
-        # req['tmcu'] = mcu_temp()
-        rc = conn.submit_data(
-            config.SUBMIT_URL, (config.SUBMIT_USER, config.SUBMIT_PASS), req
-        )
-        print("send_data() response:", rc.status_code, rc.text)
-        if rc.status_code == 200:
-            attempt_count = 0
-            blink(2)
+    rc = {"status_code": 0, "text": None}
+    if config.GPRS:
+        rc = sim900.submit_data(config.SUBMIT_URL, (config.SUBMIT_USER, config.SUBMIT_PASS), req)
+        show_submit_result(rc)
+
+    if config.WIFI:
+        if conn.setup_wifi(config.WIFI_SSID, config.WIFI_PASS):
+            rc = conn.submit_data(config.SUBMIT_URL, (config.SUBMIT_USER, config.SUBMIT_PASS), req)
+            show_submit_result(rc)
         else:
-            blink(4)
-    else:
-        print("wifi setup failed!")
-    #
+            print("wifi setup failed!")
+
     time.sleep(LOOP_DELAY)
 
 

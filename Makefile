@@ -1,13 +1,15 @@
-.PHONY: micro-python deploy deploy-lib repl install-tools
 
 # Mac
 # espport=/dev/tty.usbserial-0001
 # espport=/dev/tty.usbmodem14601
 
+ENV_FILE ?= .env
+
 # generic ESP32
 espport=/dev/ttyUSB0
 # python_image=images/ESP32_GENERIC-20241129-v1.24.1.bin
-python_image=images/ESP32_GENERIC-20250809-v1.26.0.bin
+# python_image=images/ESP32_GENERIC-20250809-v1.26.0.bin
+python_image=images/ESP32_GENERIC-20250911-v1.26.1.bin
 
 # ESP32-C3
 # espport=/dev/ttyACM0
@@ -20,8 +22,8 @@ install:
 	@echo "to activate venv run: source .venv/bin/activate"
 
 flash-micropython:
-	uv run esptool -p ${espport} erase_flash
-	uv run esptool -p ${espport} write_flash -z 0x1000 ${python_image}
+	uv run esptool -p ${espport} erase-flash
+	uv run esptool -p ${espport} write-flash -z 0x1000 ${python_image}
 	sleep 1
 
 flash-micropython-c3:
@@ -29,18 +31,19 @@ flash-micropython-c3:
 	esptool.py -p ${espport} write_flash 0 ${python_image}
 	sleep 1
 
-deploy-lib:
-	mpremote connect port:${espport} fs cp -r mrequests :
-	mpremote connect port:${espport} fs ls mrequests
+deploy-libs:
+	uv run mpremote connect port:${espport} fs cp -r mrequests :
+	uv run mpremote connect port:${espport} fs ls mrequests
 
-deploy:
-	mpremote connect port:${espport} fs cp *.py :
-	mpremote connect port:${espport} fs cp .config.py :config.py
-	mpremote connect port:${espport} fs ls
+deploy-code:
+	uv run mpremote connect port:${espport} fs cp *.py :
 
-dev:
-	uv run mpremote connect port:${espport} fs cp gprs.py :
-	uv run mpremote connect port:${espport} repl
+deploy-config:
+	uv run mpremote connect port:${espport} fs cp ${ENV_FILE} :.env
+
+# dev:
+# 	uv run mpremote connect port:${espport} fs cp *.py :
+# 	uv run mpremote connect port:${espport} repl
 
 init-board: flash-micropython deploy-lib deploy
 
@@ -50,4 +53,5 @@ init-board-c3: flash-micropython-c3 deploy-lib deploy
 repl:
 	uv run mpremote connect port:${espport} repl
 
-#.
+
+.PHONY: dev repl install flash-micro-python deploy-libs deploy-code

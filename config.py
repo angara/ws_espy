@@ -1,12 +1,18 @@
 
-VERSION = "ws_espy v2025.10.12"
+VERSION = "ws_espy/2025.11.04"
+
+def split_pair(s):
+    s = s.strip()
+    if s and s[0] != "#":
+        pair = s.split('=')
+        return (pair[0].strip(), pair[1].strip()) if pair else None
 
 def load_dotenv(dotenv_path=".env") -> dict[str, str] | None:
     try:
         with open(dotenv_path, 'r') as file:
-            return dict(line.rstrip().split('=')
-                        for line in file if line.strip() and not line.startswith('#'))
-    except FileNotFoundError:
+            pairs = (split_pair(s) for s in file.readlines())
+            return dict(p for p in pairs if p)
+    except OSError:
         return None
 
 TRUE_SET  = set(["true", "yes", "1"])
@@ -27,14 +33,16 @@ SUBMIT_URL  = env.get("SUBMIT_URL", "http://rs.angara.net/meteo/_in")
 SUBMIT_USER = env.get("SUBMIT_USER", "")
 SUBMIT_PASS = env.get("SUBMIT_PASS", "")
 
+WIFI      = env.get("WIFI")
 WIFI_SSID = env.get("WIFI_SSID")
 WIFI_PASS = env.get("WIFI_PASS")
 
-GPRS_APN  = env.get("GPRS_APN", "internet.tele2.ru")
+GPRS     = env.get("GPRS")
+GPRS_APN = env.get("GPRS_APN")
 
 HWID = env.get("HWID")  # use machine.unique_id() instead
 
 READ_TEMP = bool_val(env.get("READ_TEMP", "yes"))
 READ_WIND = bool_val(env.get("READ_WIND", "yes"))
 
-BOARD = env.get("BOARD", "esp32")  # "esp32-c3"
+BOARD = env.get("BOARD", "esp32")

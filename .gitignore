@@ -1,6 +1,3 @@
-#
-#	 generic .gitignore
-#
 
 ## no hiddens in scm
 .*
@@ -32,13 +29,12 @@
 
 ## java
 *.class
-*.[jerw]ar
+*.[jew]ar
 *.ser
 
 ## other
 *.dump
 *.iml
-*.lock
 *.log
 *.test
 
@@ -56,15 +52,9 @@ __pycache__/
 *.egg-info/
 
 ## allow
-!.clj-kondo/config.edn
 !.git*
 !.eslint*
-!.dockerignore
-!.npmingore
+!.*ignore
 !.python-version
-!.travis.yml
-!package.lock
-!uv.lock
-!yarn.lock
 
 #.
