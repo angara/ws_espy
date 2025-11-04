@@ -7,11 +7,11 @@ import re
 from conn import split_url
 import config
 
-MODEM_TX  = 12  # D2
-MODEM_RX  = 14  # D3
+MODEM_RX  = 26
+MODEM_TX  = 27
 MODEM_PWR = 13  # D8
 
-# uart = UART(1, tx=Pin(22), rx=Pin(23))
+
 uart = UART(1, 9600, tx=MODEM_TX, rx=MODEM_RX)
 
 
@@ -49,7 +49,7 @@ def tcp_send(uart:UART, apn:str, host:str, port:int, data_to_send) -> str:
         time.sleep(delay)
         resp = uart.read()
         if resp:
-            resp_str = resp.decode()
+            resp_str = resp.decode('latin-1','ignore')
             print("uart.recv <<", resp_str.strip())
             if expected in resp_str:
                 return resp_str
@@ -70,7 +70,7 @@ def tcp_send(uart:UART, apn:str, host:str, port:int, data_to_send) -> str:
     send_cmd("AT+CIPSEND", 2, ">")
     print("uart.write >>", data_to_send)
     uart.write(data_to_send + "\x1A")  # Ctrl+Z to end sending
-    time.sleep(4)
+    time.sleep(5)
     resp = uart.read()
 
     send_cmd("AT+CIPCLOSE", 2)

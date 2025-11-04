@@ -79,6 +79,7 @@ def read_wind_dir() -> int | None:
 # # # # #
 
 WIND_READ_COUNT = 90
+
 WIND_READ_DELAY = 4
 LOOP_DELAY = 1
 
@@ -134,13 +135,16 @@ def setup():
         print(f"Wind: {Uart}")
     if config.READ_TEMP:
         print("Temp:", read_temp())
+    if config.GPRS:
+        print(f"Sim900: {sim900.uart}")
 
 
 def show_submit_result(rc):
     global attempt_count
-    if rc.get("status_code"):
-        print("submit_data() response:", rc.status_code, rc.get("text"))
-        if rc.status_code == 200:
+    if rc:
+        status_code, text = rc.get("status_code"), rc.get("text")
+        print(f"submit_data() response: {status_code} {text}")
+        if status_code == 200:
             attempt_count = 0
             blink(2)
         else:

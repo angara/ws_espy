@@ -33,11 +33,11 @@ SUBMIT_URL  = env.get("SUBMIT_URL", "http://rs.angara.net/meteo/_in")
 SUBMIT_USER = env.get("SUBMIT_USER", "")
 SUBMIT_PASS = env.get("SUBMIT_PASS", "")
 
-WIFI      = env.get("WIFI")
+WIFI = bool_val(env.get("WIFI"))
 WIFI_SSID = env.get("WIFI_SSID")
 WIFI_PASS = env.get("WIFI_PASS")
 
-GPRS     = env.get("GPRS")
+GPRS = bool_val(env.get("GPRS"))
 GPRS_APN = env.get("GPRS_APN")
 
 HWID = env.get("HWID")  # use machine.unique_id() instead
