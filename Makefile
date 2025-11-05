@@ -7,8 +7,6 @@ ENV_FILE ?= .env
 
 # generic ESP32
 espport=/dev/ttyUSB0
-# python_image=images/ESP32_GENERIC-20241129-v1.24.1.bin
-# python_image=images/ESP32_GENERIC-20250809-v1.26.0.bin
 python_image=images/ESP32_GENERIC-20250911-v1.26.1.bin
 
 # ESP32-C3
